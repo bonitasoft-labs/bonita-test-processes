@@ -209,7 +209,11 @@ class SetupOrganization : Consumer<APIClient> {
                 managerId = apiClient.identityAPI.getUserByUserName(users.keys.toTypedArray()[managerUserIdPosition]).id
             }
             apiClient.safeExec {
+                val isEnabled = f.number().numberBetween(0, 1)
                 identityAPI.createUser(UserCreator(it.key, it.value).apply {
+                    if (isEnabled == 0) {
+                        setEnabled(false)
+                    }
                     setFirstName(it.key.split(".").first().capitalize())
                     setLastName(it.key.split(".").last().capitalize())
                     setJobTitle(f.job().title())
