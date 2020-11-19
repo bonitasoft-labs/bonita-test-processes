@@ -56,8 +56,11 @@ class StartXProcesses(private val targetProcessName: String, private val targetP
                                          new FileInputValue("file1", "text/plain", "the content".getBytes()),
                                          new FileInputValue("file2", "text/plain", "the content".getBytes()),
                                          new FileInputValue("file3", "text/plain", "the content".getBytes())));
-                                    apiAccessor.processAPI.startProcessWithInputs(pId,
-                                            java.util.Collections.singletonMap("fileInputValues", createList));
+                                    
+                                    def contractInputs=[fileInputValues: createList,
+                                                       file1: new FileInputValue("file1", "text/plain", "the content".getBytes()), 
+                                                       file2: new FileInputValue("file2", "text/plain", "the content".getBytes()) ]
+                                    apiAccessor.processAPI.startProcessWithInputs(pId,contractInputs);
                                     return "ok"
                                 """.trimIndent().toScript(ExpressionConstants.API_ACCESSOR.toExpression(), "targetProcessName".toParameter(), "targetProcessVersion".toParameter())))
 

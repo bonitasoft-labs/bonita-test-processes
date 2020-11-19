@@ -36,42 +36,38 @@ class ProcessWithBigData(private val number: Int) : BonitaProcess() {
                     .apply {
                         addActor("theActor", true)
                         addStartEvent("start")
-                        addAutomaticTask("auto1")
-//                        addUserTask("user1", "theActor").addDisplayName("User 1".toExpression())
+
+                        addLongTextData("longText1", """
+                            def value = new java.lang.StringBuilder()
+                            for(int i = 0; i < 1000; i++) {
+                                value.append("Lorem Elsass ipsum vielmols, libero. amet, turpis Salu bissame sit Pellentesque Racing. rucksack salu tellus bissame réchime leo Huguette in,")
+                                value.append("Wurschtsalad senectus ftomi! mamsell semper Spätzle schpeck s'guelt elementum varius Gal. leo ante et Morbi kuglopf ac Pfourtz ! DNA, id Chulia")
+                                value.append("Roberstau commodo jetz gehts los hopla ullamcorper picon bière Verdammi id, leverwurscht consectetur ac rossbolla lotto-owe ornare porta sed suspendisse")
+                                value.append("pellentesque Coopé de Truchtersheim non condimentum gewurztraminer")
+                            }
+                            return value.toString()
+                        """.trimIndent().toScript())
 
                         addContract().addFileInput("fileInputValues", "create my list of document", true)
                         addDocumentListDefinition("myDocumentList")
                                 .addInitialValue(
                                         ExpressionBuilder().createContractInputExpression("fileInputValues", List::class.java.name))
-                        addUserTask("updateList", "actor").apply {
+
+                        addDocumentDefinition("myDoc").addInitialValue(ExpressionBuilder().createContractInputExpression("file1", FileInputValue::class.java.name))
+                        addDocumentDefinition("myDoc2").addInitialValue(ExpressionBuilder().createContractInputExpression("file2", FileInputValue::class.java.name))
+
+                        addUserTask("user1", "theActor").apply {
+                            addContract().addFileInput("fileInputValues", "update my list of document", true)
                             addOperation(OperationBuilder().createSetDocumentList("myDocumentList",
                                     ExpressionBuilder().createContractInputExpression("fileInputValues", List::class.java.name)))
-                            addContract().addFileInput("fileInputValues", "update my list of document", true)
                         }
-                        addUserTask("checkListIsUpdated", "actor")
-                        addTransition("updateList", "checkListIsUpdated")
-                        addTransition("start", "updateList")
 
-//                        var expressionBuilder = ExpressionBuilder().createContractInputExpression("reportInit",
-//                                FileInputValue::class.java.canonicalName as String)
-//                        addDocumentDefinition("doc").addInitialValue(expressionBuilder)
-//
-//                        addUserTask("user2", "theActor").addDisplayName("User 2".toExpression()).apply {
-//                            addContract().addFileInput("reportInit", "myReport")
-//                        }
-//                        addLongTextData("longText1", """
-//                            def value = new java.lang.StringBuilder()
-//                            for(int i = 0; i < 1000; i++) {
-//                                value.append("Lorem Elsass ipsum vielmols, libero. amet, turpis Salu bissame sit Pellentesque Racing. rucksack salu tellus bissame réchime leo Huguette in,")
-//                                value.append("Wurschtsalad senectus ftomi! mamsell semper Spätzle schpeck s'guelt elementum varius Gal. leo ante et Morbi kuglopf ac Pfourtz ! DNA, id Chulia")
-//                                value.append("Roberstau commodo jetz gehts los hopla ullamcorper picon bière Verdammi id, leverwurscht consectetur ac rossbolla lotto-owe ornare porta sed suspendisse")
-//                                value.append("pellentesque Coopé de Truchtersheim non condimentum gewurztraminer")
-//                            }
-//                            return value.toString()
-//                        """.trimIndent().toScript())
-//                        addTransition("start", "auto1")
-//                        addTransition("start", "user1")
-//                        addTransition("start", "user2")
+                        addUserTask("user2", "theActor").addDisplayName("User 2".toExpression())
+                        addAutomaticTask("user3").addDisplayName("User 3".toExpression())
+
+                        addTransition("start", "user1")
+                        addTransition("start", "user2")
+                        addTransition("start", "user3")
                     }
 
 
