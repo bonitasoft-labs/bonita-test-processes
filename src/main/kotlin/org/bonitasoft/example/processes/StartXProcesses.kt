@@ -49,13 +49,15 @@ class StartXProcesses(private val targetProcessName: String, private val targetP
                         addAutomaticTask("task1").apply {
                             addMultiInstance(false, ExpressionBuilder().createDataExpression("instances", "java.lang.Integer"))
                             addOperation(OperationBuilder().createSetDataOperation("someText", """
+                                    import org.bonitasoft.engine.bpm.contract.FileInputValue;
+                                 
                                     def pId = apiAccessor.processAPI.getProcessDefinitionId(targetProcessName, targetProcessVersion)
-                                    ArrayList<Serializable> createList = new ArrayList<>(asList(
-                                            FileInputValue("file1", "text/plain", "the content".getBytes()),
-                                            FileInputValue("file2", "text/plain", "the content".getBytes()),
-                                            FileInputValue("file3", "text/plain", "the content".getBytes())));
+                                    ArrayList<Serializable> createList = new ArrayList<>(java.util.Arrays.asList(
+                                         new FileInputValue("file1", "text/plain", "the content".getBytes()),
+                                         new FileInputValue("file2", "text/plain", "the content".getBytes()),
+                                         new FileInputValue("file3", "text/plain", "the content".getBytes())));
                                     apiAccessor.processAPI.startProcessWithInputs(pId,
-                                            singletonMap("fileInputValues", createList));
+                                            java.util.Collections.singletonMap("fileInputValues", createList));
                                     return "ok"
                                 """.trimIndent().toScript(ExpressionConstants.API_ACCESSOR.toExpression(), "targetProcessName".toParameter(), "targetProcessVersion".toParameter())))
 
@@ -76,6 +78,8 @@ class StartXProcesses(private val targetProcessName: String, private val targetP
                     "targetProcessVersion" to targetProcessVersion
             ))
         }
+
+
 
     }
 
