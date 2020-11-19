@@ -49,7 +49,7 @@ class SetupOrganization : Consumer<APIClient> {
 
     override fun accept(apiClient: APIClient) {
         // users
-        for(i in 1 until 11000) {
+        for(i in 1 until 110) {
             var intermediary = f.name().username()
             while (users.contains(intermediary)) {
                 intermediary = f.name().username()
@@ -58,7 +58,7 @@ class SetupOrganization : Consumer<APIClient> {
         }
 
         // groups
-        for(i in 1 until 250) {
+        for(i in 1 until 25) {
             var intermediary = f.commerce().department().replace(" &", ",")
             while (groups.contains(intermediary)) {
                 intermediary = f.commerce().department().replace(" &", ",")
@@ -69,7 +69,7 @@ class SetupOrganization : Consumer<APIClient> {
         }
 
         // roles
-        for(i in 1 until 30) {
+        for(i in 1 until 3) {
             var intermediary = f.job().title()
             while (roles.contains(intermediary)) {
                 intermediary = f.job().title()
@@ -78,7 +78,7 @@ class SetupOrganization : Consumer<APIClient> {
         }
 
         // profile
-        for(i in 1 until 1100) {
+        for(i in 1 until 11) {
             var intermediary = f.commerce().department().replace(" &", ",")
             while (profiles.contains(intermediary)) {
                 intermediary = f.commerce().department().replace(" &", ",")

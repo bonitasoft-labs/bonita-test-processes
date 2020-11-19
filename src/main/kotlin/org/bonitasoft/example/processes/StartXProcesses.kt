@@ -50,7 +50,12 @@ class StartXProcesses(private val targetProcessName: String, private val targetP
                             addMultiInstance(false, ExpressionBuilder().createDataExpression("instances", "java.lang.Integer"))
                             addOperation(OperationBuilder().createSetDataOperation("someText", """
                                     def pId = apiAccessor.processAPI.getProcessDefinitionId(targetProcessName, targetProcessVersion)
-                                    apiAccessor.processAPI.startProcess(pId)
+                                    ArrayList<Serializable> createList = new ArrayList<>(asList(
+                                            FileInputValue("file1", "text/plain", "the content".getBytes()),
+                                            FileInputValue("file2", "text/plain", "the content".getBytes()),
+                                            FileInputValue("file3", "text/plain", "the content".getBytes())));
+                                    apiAccessor.processAPI.startProcessWithInputs(pId,
+                                            singletonMap("fileInputValues", createList));
                                     return "ok"
                                 """.trimIndent().toScript(ExpressionConstants.API_ACCESSOR.toExpression(), "targetProcessName".toParameter(), "targetProcessVersion".toParameter())))
 

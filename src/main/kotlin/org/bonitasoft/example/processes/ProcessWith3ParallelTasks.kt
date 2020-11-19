@@ -18,15 +18,16 @@ import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder
 import org.bonitasoft.engine.bpm.bar.actorMapping.Actor
 import org.bonitasoft.engine.bpm.bar.actorMapping.ActorMapping
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder
+import org.bonitasoft.example.toExpression
 
-class ProcessWith2AutomaticTasks : BonitaProcess() {
+class ProcessWith3ParallelTasks : BonitaProcess() {
     override fun process(): ProcessDefinitionBuilder {
         return ProcessDefinitionBuilder().createNewInstance("ProcessWith2AutomaticTasks", "1.0")
                 .apply {
                     addActor("theActor", true)
-                    addAutomaticTask("sub1")
-                    addAutomaticTask("sub2")
-                    addUserTask("t1", "theActor")
+                    addUserTask("t1", "theActor").addDisplayName("Task 1".toExpression())
+                    addUserTask("t2", "theActor").addDisplayName("Task 2".toExpression())
+                    addUserTask("t2", "theActor").addDisplayName("Task 3".toExpression())
                 }
     }
 

@@ -36,37 +36,17 @@ class App {
         ))
         val apiClient = APIClient().apply { login("install", "install") }
 
-        /*apiClient.safeExec {
-            var gc = GroupCreator("testGroup")
-            gc.setParentPath("")
-            gc.setDisplayName("testGroup")
+        /*SetupOrganization().accept(apiClient)*/
 
-            identityAPI.createGroup(gc)
-
-            apiClient.profileAPI.createProfile(ProfileCreator("testProfile"))
-
-            identityAPI.createUser(UserCreator("testUser", "123"))
-
-            identityAPI.createRole("testRole")
-
-            profileAPI.addUserToProfile(identityAPI.getUserByUserName("testUser"), "testProfile")
-            profileAPI.addRoleToProfile(identityAPI.getRoleByName("testRole"), "testProfile")
-            profileAPI.addGroupToProfile(identityAPI.getGroupByPath("/testGroup"), "testProfile")
-            profileAPI.addMembershipToProfile(identityAPI.getGroupByPath("/testGroup"), identityAPI.getRoleByName("testRole"), "testProfile")
-
-        }*/
-
-        SetupOrganization().accept(apiClient)
-
-        /*val calledProcess = ProcessWith2AutomaticTasks().apply {
+        val calledProcess = ProcessWithBigData(100).apply {
             accept(apiClient)
         }
-        val process = ProcessWithCallActivityAborted(calledProcess.name, calledProcess.version).apply {
-            accept(apiClient)
-        }
-        val callProcessXTimes = StartXProcesses(process.name, process.version, 200).apply {
+        /*val process = ProcessWithCallActivityAborted(calledProcess.name, calledProcess.version).apply {
             accept(apiClient)
         }*/
+        val callProcessXTimes = StartXProcesses(calledProcess.name, calledProcess.version, 1).apply {
+            accept(apiClient)
+        }
     }
 }
 
@@ -100,6 +80,6 @@ fun ProfileAPI.addMembershipToProfile(group: Group, role: Role, profileName: Str
 }
 
 fun main(args: Array<String>) {
-    App().run(args.getOrElse(0) { "http://ec2-63-32-57-248.eu-west-1.compute.amazonaws.com:8080" })
+    App().run(args.getOrElse(0) { "http://ec2-54-75-10-130.eu-west-1.compute.amazonaws.com:8080" })
     //App().run(args.getOrElse(0) { "http://localhost:8080" })
 }
