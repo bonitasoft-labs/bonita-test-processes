@@ -31,6 +31,7 @@ fun String.toIntegerParameter(): Expression = ExpressionBuilder().createParamete
 fun Int.toExpression(): Expression = ExpressionBuilder().createConstantIntegerExpression(this)
 fun ExpressionConstants.toExpression(): Expression = ExpressionBuilder().createEngineConstant(this)
 fun String.toScript(vararg dependencies: Expression): Expression = ExpressionBuilder().createGroovyScriptExpression("aScript", this, String::class.java.name, dependencies.toList())
+fun String.toScript(returnType: String, vararg dependencies: Expression): Expression = ExpressionBuilder().createGroovyScriptExpression("aScript", this, returnType, dependencies.toList())
 fun String.toIntegerScript(vararg dependencies: Expression): Expression = ExpressionBuilder().createGroovyScriptExpression("aScript", this, Integer::class.java.name, dependencies.toList())
 
 fun getJar(vararg classes: Class<out Any>): ByteArray {

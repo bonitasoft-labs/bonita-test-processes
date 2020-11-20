@@ -37,6 +37,18 @@ class ProcessWithBigData(private val number: Int) : BonitaProcess() {
                         addActor("theActor", true)
                         addStartEvent("start")
 
+                        for (i in 1 until 15) {
+                            addShortTextData("simpleVar" + i, "simple var content $i".toExpression() )
+                        }
+
+                        addBusinessData("myEmployee","com.company.model.Employee", """
+                            def employee = new com.company.model.Employee()
+                            employee.name = "name"
+                            return employee
+                        """.trimIndent().toScript("com.company.model.Employee"))
+
+                        addContextEntry("myEmployee_ref", ExpressionBuilder().createBusinessDataReferenceExpression("myEmployee"))
+
                         addLongTextData("longText1", """
                             def value = new java.lang.StringBuilder()
                             for(int i = 0; i < 1000; i++) {
@@ -48,6 +60,55 @@ class ProcessWithBigData(private val number: Int) : BonitaProcess() {
                             return value.toString()
                         """.trimIndent().toScript())
 
+                        addXMLData("xmlVar1", """ 
+                           <?xml version="1.0" encoding="utf-8"?>
+                            <xs:schema targetNamespace="http://tempuri.org/XMLSchema.xsd"
+                            
+                                elementFormDefault="qualified"  
+                            
+                                xmlns="http://tempuri.org/XMLSchema.xsd" 
+                            
+                                xmlns:mstns="http://tempuri.org/XMLSchema.xsd"  
+                            
+                                xmlns:xs="http://www.w3.org/2001/XMLSchema">
+                              <xs:simpleType name="AuthorInfor">
+                                <xs:annotation>
+                                  <xs:documentation>this element will all authors for book</xs:documentation>
+                                </xs:annotation>
+                                <xs:restriction base='xs:string'>
+                                  <xs:maxLength value='15'/>
+                                </xs:restriction>
+                              </xs:simpleType>
+                              <xs:simpleType name="IsdnInfo">
+                                <xs:annotation>
+                                  <xs:documentation>this element defines 10 digit ISDN code</xs:documentation>
+                                </xs:annotation>
+                                <xs:restriction base='xs:string'>
+                                  <xs:maxLength value='10'/>
+                                </xs:restriction>
+                              </xs:simpleType>
+                              <xs:complexType name="BookShelfInfo">
+                                <xs:sequence>
+                                  <xs:choice minOccurs="1" maxOccurs="1">
+                                    <xs:choice minOccurs="1" maxOccurs="5">
+                                      <xs:element name="byAuthor" type="AuthorInfor"/>
+                                    </xs:choice>
+                                    <xs:element name="byISDNNo" type="IsdnInfo"/>
+                                  </xs:choice>
+                                </xs:sequence>
+                              </xs:complexType>
+                              <xs:element name="MyBookShelf" type="BookShelfInfo"/>
+                            </xs:schema>
+                        """.trimIndent().toExpression())
+
+                        addXMLData("xmlVar2", """
+                            <?xml version="1.0" encoding="utf-8"?>
+                            <MyBookShelf xmlns="http://tempuri.org/XMLSchema.xsd">
+                              <byAuthor>Chetan Bhagat</byAuthor>
+                              <byAuthor>Aditya Ghosh</byAuthor>
+                              <byAuthor>Reena Mehta</byAuthor>
+                            </MyBookShelf>
+                        """.trimIndent().toExpression())
                         addContract().addFileInput("fileInputValues", "create my list of document", true)
                         addDocumentListDefinition("myDocumentList")
                                 .addInitialValue(
@@ -60,11 +121,10 @@ class ProcessWithBigData(private val number: Int) : BonitaProcess() {
                             addContract().addFileInput("fileInputValues", "update my list of document", true)
                             addOperation(OperationBuilder().createSetDocumentList("myDocumentList",
                                     ExpressionBuilder().createContractInputExpression("fileInputValues", List::class.java.name)))
-                        }
 
-                        addUserTask("user2", "theActor").addDisplayName("User 2".toExpression())
+                        }.addUserTask("user2", "theActor").addDisplayName("User 2".toExpression())
                         addAutomaticTask("user3").addDisplayName("User 3".toExpression())
-
+                        addAutomaticTask("userTaskFailed").addDisplayName("throw new Exception()".toScript())
                         addTransition("start", "user1")
                         addTransition("start", "user2")
                         addTransition("start", "user3")

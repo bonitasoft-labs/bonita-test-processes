@@ -33,7 +33,7 @@ import org.bonitasoft.example.toParameter
 import org.bonitasoft.example.toScript
 import java.lang.Exception
 
-class StartXProcesses(private val targetProcessName: String, private val targetProcessVersion: String, private val instances: Int) : BonitaProcess() {
+class StartXProcessesWithData(private val targetProcessName: String, private val targetProcessVersion: String, private val instances: Int) : BonitaProcess() {
     override fun process(): ProcessDefinitionBuilder =
             ProcessDefinitionBuilder().createNewInstance("StartXProcesses", "1.1")
                     .apply {
@@ -49,19 +49,39 @@ class StartXProcesses(private val targetProcessName: String, private val targetP
                         addAutomaticTask("task1").apply {
                             addMultiInstance(false, ExpressionBuilder().createDataExpression("instances", "java.lang.Integer"))
                             addOperation(OperationBuilder().createSetDataOperation("someText", """
-                                    import org.bonitasoft.engine.bpm.contract.FileInputValue;
-                                 
-                                    def pId = apiAccessor.processAPI.getProcessDefinitionId(targetProcessName, targetProcessVersion)
-                                    ArrayList<Serializable> createList = new ArrayList<>(java.util.Arrays.asList(
-                                         new FileInputValue("file1", "text/plain", "the content".getBytes()),
-                                         new FileInputValue("file2", "text/plain", "the content".getBytes()),
-                                         new FileInputValue("file3", "text/plain", "the content".getBytes())));
-                                    
-                                    def contractInputs=[fileInputValues: createList,
-                                                       file1: new FileInputValue("file1", "text/plain", "the content".getBytes()), 
-                                                       file2: new FileInputValue("file2", "text/plain", "the content".getBytes()) ]
-                                    apiAccessor.processAPI.startProcessWithInputs(pId,contractInputs);
-                                    return "ok"
+                                  import org.bonitasoft.engine.bpm.contract.FileInputValue;
+
+                                def user =  apiAccessor.identityAPI.getUserByUserName("walter.bates")
+                                
+                                def pId = apiAccessor.processAPI.getProcessDefinitionId(targetProcessName, targetProcessVersion)
+                                ArrayList<Serializable> createList = new ArrayList<>(java.util.Arrays.asList(
+                                        new FileInputValue("file1", "text/plain", "the content".getBytes()),
+                                        new FileInputValue("file2", "text/plain", "the content".getBytes()),
+                                        new FileInputValue("file3", "text/plain", "the content".getBytes())));
+                                
+                                
+                                def contractInputs=[fileInputValues: createList,
+                                                    file1: new FileInputValue("file1", "text/plain", "the content".getBytes()),
+                                                    file2: new FileInputValue("file2", "text/plain", "the content".getBytes()) ]
+                                def processInstance = apiAccessor.processAPI.startProcessWithInputs(pId,contractInputs);
+                                
+                                int count = 0;
+                                while(count < 1000) {
+                                    def comment = new java.lang.StringBuilder()
+                                    if( count % 2 ){
+                                        comment.append("Lorem Elsass ipsum vielmols, libero. amet, turpis Salu bissame sit Pellentesque Racing. rucksack salu tellus bissame réchime leo Huguette in,")
+                                        comment.append("Roberstau commodo jetz gehts los hopla ullamcorper picon bière Verdammi id, leverwurscht consectetur ac rossbolla lotto-owe ornare porta sed suspendisse")
+                                        comment.append("pellentesque Coopé de Truchtersheim non condimentum gewurztraminer")
+                                        apiAccessor.processAPI.addProcessCommentOnBehalfOfUser(processInstance.id, comment.toString(), user.id)
+                                    }else{
+                                        comment.append("Wurschtsalad senectus ftomi!  DNA, id Chulia")
+                                        apiAccessor.processAPI.addProcessComment(processInstance.id, comment.toString())
+                                    }
+                                
+                                
+                                    count++;
+                                }
+                                return "ok"
                                 """.trimIndent().toScript(ExpressionConstants.API_ACCESSOR.toExpression(), "targetProcessName".toParameter(), "targetProcessVersion".toParameter())))
 
                         }
