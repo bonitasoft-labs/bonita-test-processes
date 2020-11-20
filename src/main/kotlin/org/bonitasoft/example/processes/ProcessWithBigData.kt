@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.example.processes
 
+import com.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilderExt
+import com.github.javafaker.Faker
 import org.bonitasoft.engine.api.APIClient
 import org.bonitasoft.engine.bpm.bar.BarResource
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder
@@ -32,7 +34,7 @@ import java.util.*
 
 class ProcessWithBigData(private val number: Int) : BonitaProcess() {
     override fun process(): ProcessDefinitionBuilder =
-            ProcessDefinitionBuilder().createNewInstance("BigData-$number", "1.0")
+            ProcessDefinitionBuilderExt().createNewInstance("BigData-$number", "1.0")
                     .apply {
                         addActor("theActor", true)
                         addStartEvent("start")
@@ -46,6 +48,13 @@ class ProcessWithBigData(private val number: Int) : BonitaProcess() {
                             employee.name = "name"
                             return employee
                         """.trimIndent().toScript("com.company.model.Employee"))
+
+                        var faker = Faker()
+                        setStringIndex(1, faker.lorem().fixedString(255), faker.lorem().fixedString(255).toExpression())
+                        setStringIndex(2, faker.lorem().fixedString(255), faker.lorem().fixedString(255).toExpression())
+                        setStringIndex(3, faker.lorem().fixedString(255), faker.lorem().fixedString(255).toExpression())
+                        setStringIndex(4, faker.lorem().fixedString(255), faker.lorem().fixedString(255).toExpression())
+                        setStringIndex(5, faker.lorem().fixedString(255), faker.lorem().fixedString(255).toExpression())
 
                         addContextEntry("myEmployee_ref", ExpressionBuilder().createBusinessDataReferenceExpression("myEmployee"))
 
