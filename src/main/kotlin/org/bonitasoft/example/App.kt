@@ -44,33 +44,6 @@ class App {
 
 
 
-        apiClient.tenantAdministrationAPI.pause()
-
-        apiClient.tenantAdministrationAPI.cleanAndUninstallBusinessDataModel();
-
-        apiClient.tenantAdministrationAPI.installBusinessDataModel(BusinessObjectModelConverter().zip(BusinessObjectModel().apply {
-            val addresse = BusinessObject().apply {
-                qualifiedName = "com.company.model.Addresse"
-                addField(SimpleField().apply {
-                    name = "street"
-                    type = FieldType.STRING
-                })
-            }
-            addBusinessObject(addresse)
-            addBusinessObject(BusinessObject().apply {
-                qualifiedName = "com.company.model.Employee"
-                addField(SimpleField().apply {
-                    name = "name"
-                    type = FieldType.STRING
-                })
-                addField(RelationField().apply {
-                    name = "addresses"
-                    type = RelationField.Type.AGGREGATION
-                    reference = addresse
-                })
-            })
-        }));
-        apiClient.tenantAdministrationAPI.resume()
         /*SetupOrganization().accept(apiClient)*/
 
         val calledProcess = ProcessWithBigData(100).apply {
