@@ -27,7 +27,7 @@ import org.bonitasoft.engine.form.FormMappingType
 import org.bonitasoft.example.safeExec
 import java.util.function.Consumer
 
-abstract class BonitaProcess : Consumer<APIClient> {
+abstract class BonitaProcess(val enable:Boolean = true) : Consumer<APIClient> {
     val businessArchive: BusinessArchive by lazy {
         build()
     }
@@ -56,8 +56,10 @@ abstract class BonitaProcess : Consumer<APIClient> {
             processDefinitionId = processAPI.deploy(businessArchive).id
         }
         client.safeExec {
-            println("Enable process $name $version")
-            processAPI.enableProcess(processDefinitionId!!)
+            if (enable) {
+                println("Enable process $name $version")
+                processAPI.enableProcess(processDefinitionId!!)
+            }
         }
     }
 

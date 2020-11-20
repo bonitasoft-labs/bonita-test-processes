@@ -14,22 +14,15 @@
  */
 package org.bonitasoft.example
 
-import com.github.javafaker.Faker
 import com.bonitasoft.engine.api.APIClient
-import com.bonitasoft.engine.profile.ProfileCreator
 import org.bonitasoft.engine.api.ApiAccessType
 import org.bonitasoft.engine.api.ProfileAPI
-import org.bonitasoft.engine.bdm.BusinessObjectModelConverter
-import org.bonitasoft.engine.bdm.model.BusinessObject
-import org.bonitasoft.engine.bdm.model.BusinessObjectModel
-import org.bonitasoft.engine.bdm.model.field.FieldType
-import org.bonitasoft.engine.bdm.model.field.RelationField
-import org.bonitasoft.engine.bdm.model.field.SimpleField
-import org.bonitasoft.engine.identity.*
+import org.bonitasoft.engine.identity.Group
+import org.bonitasoft.engine.identity.Role
+import org.bonitasoft.engine.identity.User
 import org.bonitasoft.engine.profile.ProfileMemberCreator
 import org.bonitasoft.engine.search.SearchOptionsBuilder
 import org.bonitasoft.engine.util.APITypeManager
-import org.bonitasoft.example.processes.*
 
 class App {
 
@@ -43,21 +36,7 @@ class App {
 
 
 
-
-        /*SetupOrganization().accept(apiClient)*/
-
-        val calledProcess = ProcessWithBigData(100).apply {
-            accept(apiClient)
-        }
-        /*val process = ProcessWithCallActivityAborted(calledProcess.name, calledProcess.version).apply {
-            accept(apiClient)
-        }*/
-        val callProcessXTimes = StartXProcessesWithData(calledProcess.name, calledProcess.version, 1).apply {
-            accept(apiClient)
-        }
-//        val generatedProcessWithForms = GeneratedProcessWithForms().apply {
-//            accept(apiClient)
-//        }
+        DeployAdminApplicationTestData().accept(apiClient)
     }
 }
 
