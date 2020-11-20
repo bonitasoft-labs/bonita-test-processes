@@ -17,6 +17,7 @@ package org.bonitasoft.example.processes
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder
 import org.bonitasoft.engine.bpm.bar.actorMapping.Actor
 import org.bonitasoft.engine.bpm.bar.actorMapping.ActorMapping
+import org.bonitasoft.engine.bpm.process.DesignProcessDefinition
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder
 import org.bonitasoft.example.toExpression
 import org.bonitasoft.example.toParameter
@@ -32,7 +33,7 @@ class CallProcessXTimes(private val targetProcessName: String, private val targe
                     }
 
 
-    override fun withResources(bar: BusinessArchiveBuilder) {
+    override fun withResources(bar: BusinessArchiveBuilder, processDefinition: DesignProcessDefinition) {
         bar.apply {
             actorMapping = ActorMapping().apply {
                 addActor(Actor("theActor").apply {

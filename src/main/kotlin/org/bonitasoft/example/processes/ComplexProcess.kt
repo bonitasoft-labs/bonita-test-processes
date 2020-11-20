@@ -19,7 +19,7 @@ import org.bonitasoft.engine.bpm.bar.BarResource
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder
 import org.bonitasoft.engine.bpm.bar.actorMapping.Actor
 import org.bonitasoft.engine.bpm.bar.actorMapping.ActorMapping
-import org.bonitasoft.engine.bpm.flownode.GatewayType
+import org.bonitasoft.engine.bpm.process.DesignProcessDefinition
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder
 import org.bonitasoft.engine.expression.ExpressionBuilder
 import org.bonitasoft.engine.operation.OperationBuilder
@@ -162,7 +162,7 @@ class ComplexProcess(private val number: Int) : BonitaProcess() {
                         addTransition("user1", "auto2")
                     }
 
-    override fun withResources(bar: BusinessArchiveBuilder) {
+    override fun withResources(bar: BusinessArchiveBuilder, processDefinition: DesignProcessDefinition) {
         bar.apply {
             actorMapping = ActorMapping().apply {
                 addActor(Actor("theActor").apply {
