@@ -14,16 +14,16 @@
  */
 package org.bonitasoft.example
 
-import com.github.javafaker.Faker
-import com.bonitasoft.engine.api.APIClient
-import com.bonitasoft.engine.profile.ProfileCreator
+import org.bonitasoft.engine.api.APIClient
 import org.bonitasoft.engine.api.ApiAccessType
 import org.bonitasoft.engine.api.ProfileAPI
-import org.bonitasoft.engine.identity.*
+import org.bonitasoft.engine.identity.Group
+import org.bonitasoft.engine.identity.Role
+import org.bonitasoft.engine.identity.User
 import org.bonitasoft.engine.profile.ProfileMemberCreator
 import org.bonitasoft.engine.search.SearchOptionsBuilder
 import org.bonitasoft.engine.util.APITypeManager
-import org.bonitasoft.example.processes.*
+import org.bonitasoft.example.processes.GeneratedProcessWithForms
 
 class App {
 

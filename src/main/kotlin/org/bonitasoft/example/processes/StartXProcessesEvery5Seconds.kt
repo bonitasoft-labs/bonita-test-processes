@@ -16,6 +16,7 @@ package org.bonitasoft.example.processes
 
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder
 import org.bonitasoft.engine.bpm.flownode.TimerType
+import org.bonitasoft.engine.bpm.process.DesignProcessDefinition
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder
 import org.bonitasoft.engine.expression.ExpressionConstants
 import org.bonitasoft.engine.operation.OperationBuilder
@@ -44,7 +45,7 @@ class StartXProcessesEvery5Seconds(private val targetProcessName: String, privat
                         addTransition("startTimer", "task1")
                     }
 
-    override fun withResources(bar: BusinessArchiveBuilder) {
+    override fun withResources(bar: BusinessArchiveBuilder, processDefinition: DesignProcessDefinition) {
         bar.setParameters(mapOf("instances" to instances.toString()))
     }
 }

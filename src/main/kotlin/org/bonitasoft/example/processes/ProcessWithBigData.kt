@@ -15,20 +15,16 @@
 package org.bonitasoft.example.processes
 
 import org.bonitasoft.engine.api.APIClient
-import org.bonitasoft.engine.bpm.bar.BarResource
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder
 import org.bonitasoft.engine.bpm.bar.actorMapping.Actor
 import org.bonitasoft.engine.bpm.bar.actorMapping.ActorMapping
-import org.bonitasoft.engine.bpm.contract.ContractDefinition
 import org.bonitasoft.engine.bpm.contract.FileInputValue
-import org.bonitasoft.engine.bpm.contract.Type
-import org.bonitasoft.engine.bpm.process.impl.ContractDefinitionBuilder
+import org.bonitasoft.engine.bpm.process.DesignProcessDefinition
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder
 import org.bonitasoft.engine.expression.ExpressionBuilder
 import org.bonitasoft.engine.operation.OperationBuilder
 import org.bonitasoft.example.toExpression
 import org.bonitasoft.example.toScript
-import java.util.*
 
 class ProcessWithBigData(private val number: Int) : BonitaProcess() {
     override fun process(): ProcessDefinitionBuilder =
@@ -95,7 +91,7 @@ class ProcessWithBigData(private val number: Int) : BonitaProcess() {
         disableAndDeleteProcess(processDefinition);
      */
 
-    override fun withResources(bar: BusinessArchiveBuilder) {
+    override fun withResources(bar: BusinessArchiveBuilder, processDefinition: DesignProcessDefinition) {
         bar.apply {
             actorMapping = ActorMapping().apply {
                 addActor(Actor("theActor").apply {
@@ -105,14 +101,5 @@ class ProcessWithBigData(private val number: Int) : BonitaProcess() {
             }
 //            addClasspathResource(BarResource("jar$number.jar", ByteArray(2 * 1000 * 1000).apply { Random().nextBytes(this) }))
         }
-    }
-
-    override fun accept(client: APIClient) {
-        super.accept(client)
-
-        println("Start process $name $version")
-        //val deployed = client.processAPI.getProcessDefinitionId(name, version)
-        //deployed.apply { client.processAPI.startProcess(this) }
-
     }
 }
