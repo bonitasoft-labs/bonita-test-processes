@@ -19,7 +19,6 @@ import com.bonitasoft.engine.api.APIClient
 import com.bonitasoft.engine.profile.ProfileCreator
 import org.bonitasoft.engine.api.ApiAccessType
 import org.bonitasoft.engine.api.ProfileAPI
-import org.bonitasoft.engine.bpm.bar.actorMapping.Actor
 import org.bonitasoft.engine.identity.*
 import org.bonitasoft.engine.profile.ProfileMemberCreator
 import org.bonitasoft.engine.search.SearchOptionsBuilder
@@ -38,13 +37,16 @@ class App {
 
         /*SetupOrganization().accept(apiClient)*/
 
-        val calledProcess = ProcessWithBigData(100).apply {
-            accept(apiClient)
-        }
+//        val calledProcess = ProcessWithBigData(100).apply {
+//            accept(apiClient)
+//        }
         /*val process = ProcessWithCallActivityAborted(calledProcess.name, calledProcess.version).apply {
             accept(apiClient)
         }*/
-        val callProcessXTimes = StartXProcesses(calledProcess.name, calledProcess.version, 1).apply {
+//        val callProcessXTimes = StartXProcesses(calledProcess.name, calledProcess.version, 1).apply {
+//            accept(apiClient)
+//        }
+        val generatedProcessWithForms = GeneratedProcessWithForms().apply {
             accept(apiClient)
         }
     }
