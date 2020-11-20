@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.example
 
-import com.bonitasoft.engine.profile.ProfileCreator
 import com.github.javafaker.Faker
 import org.bonitasoft.engine.api.APIClient
 import org.bonitasoft.engine.identity.GroupCreator
@@ -25,24 +24,24 @@ import kotlin.math.min
 
 class SetupOrganization : Consumer<APIClient> {
 
-    companion object SetupOragnization {
+    companion object {
         val f = Faker()
 
-        val users = LinkedHashMap<String, String>() // f.name().username()
-        val groups = LinkedHashMap<String, String>() // f.commerce().department()
-        val roles = ArrayList<String>() // f.job().title()
-        val profiles = ArrayList<String>() // f.commerce().department()
+        val users = mutableMapOf<String, String>()
+        val groups = mutableMapOf<String, String>()
+        val roles = mutableListOf<String>()
+        val profiles = mutableListOf<String>()
     }
 
-    private fun getRandomGroupPath(listOfGroups: LinkedHashMap<String, String>) : String {
-        var parentNumber = f.number().numberBetween(0, listOfGroups.size)
+    private fun getRandomGroupPath(listOfGroups: Map<String, String>): String {
+        val parentNumber = f.number().numberBetween(0, listOfGroups.size)
 
         if (parentNumber == 0) {
             return ""
         }
 
-        var parentKey = listOfGroups.keys.toTypedArray()[parentNumber]
-        var parentValue = listOfGroups[parentKey]
+        val parentKey = listOfGroups.keys.toTypedArray()[parentNumber]
+        val parentValue = listOfGroups[parentKey]
 
         return "$parentValue/$parentKey"
     }
@@ -89,24 +88,22 @@ class SetupOrganization : Consumer<APIClient> {
         // create all the profiles
         profiles.map {
             apiClient.safeExec {
-                val apiClientSp = this as com.bonitasoft.engine.api.APIClient
-
-                val profileAPI = apiClientSp.profileAPI
-
-                var pc = ProfileCreator(it)
-
-                val trueOrFalse = f.number().numberBetween(0, 2)
-                if (trueOrFalse == 0) {
-                    pc.setDescription(f.harryPotter().quote())
-                }
-
-                profileAPI.createProfile(pc)
+//TODO replace by profile import
+//
+//                val pc = ProfileCreator(it)
+//
+//                val trueOrFalse = f.number().numberBetween(0, 2)
+//                if (trueOrFalse == 0) {
+//                    pc.setDescription(f.harryPotter().quote())
+//                }
+//
+//                profileAPI.createProfile(pc)
             }
         }
         apiClient.safeExec {
-            val apiClientSp = this as com.bonitasoft.engine.api.APIClient
-            apiClientSp.profileAPI.createProfile(ProfileCreator("Administrator"))
-            apiClientSp.profileAPI.createProfile(ProfileCreator("User"))
+            //TODO replace by profile import
+//            profileAPI.createProfile(ProfileCreator("Administrator"))
+//            profileAPI.createProfile(ProfileCreator("User"))
         }
 
 
@@ -129,7 +126,7 @@ class SetupOrganization : Consumer<APIClient> {
             apiClient.safeExec {
                 if (it != null) {
                     val numberOfProfilesToAdd = f.number().numberBetween(10, min(30, profiles.size))
-                    var profilesWorkingList = profiles.clone() as ArrayList<String>
+                    val profilesWorkingList = mutableListOf<String>().apply { addAll(profiles) }
 
                     for (i in 0 until numberOfProfilesToAdd) {
                         val random = f.number().numberBetween(0, profilesWorkingList.size)
@@ -145,7 +142,7 @@ class SetupOrganization : Consumer<APIClient> {
             identityAPI.createRole("member")
         }
         roles.map {
-            var rc = RoleCreator(it)
+            val rc = RoleCreator(it)
             rc.setDisplayName(it)
             val trueOrFalse = f.number().numberBetween(0, 2)
             if (trueOrFalse == 0) {
@@ -158,7 +155,7 @@ class SetupOrganization : Consumer<APIClient> {
             apiClient.safeExec {
                 if (it != null) {
                     val numberOfProfilesToAdd = f.number().numberBetween(50, min(100, profiles.size))
-                    var profilesWorkingList = profiles.clone() as ArrayList<String>
+                    val profilesWorkingList = mutableListOf<String>().apply { addAll(profiles) }
 
                     for (i in 0 until numberOfProfilesToAdd) {
                         val random = f.number().numberBetween(0, profilesWorkingList.size)
@@ -174,7 +171,7 @@ class SetupOrganization : Consumer<APIClient> {
             apiClient.safeExec {
                 val numberOfMemberships = f.number().numberBetween(1, min(20, groups.size))
 
-                var groupsWorkingList = groups.clone() as LinkedHashMap<String, String>
+                val groupsWorkingList = mutableMapOf<String, String>().apply { putAll(groups) }
                 for(i in 0 until numberOfMemberships) {
                     var randomGroup = f.number().numberBetween(0, groupsWorkingList.size)
                     var randomGroupPath = groupsWorkingList.values.toTypedArray()[randomGroup]
@@ -201,8 +198,8 @@ class SetupOrganization : Consumer<APIClient> {
             })
         }
         users.map {
-            var managerUserIdPosition = f.number().numberBetween(0, users.keys.indexOf(it.key))
-            var managerId: Long
+            val managerUserIdPosition = f.number().numberBetween(0, users.keys.indexOf(it.key))
+            val managerId: Long
             if (users.keys.indexOf(it.key) == 0) {
                 managerId = apiClient.identityAPI.getUserByUserName("walter.bates").id
             } else {
@@ -223,8 +220,8 @@ class SetupOrganization : Consumer<APIClient> {
         }.forEach {
             apiClient.safeExec {
                 if (it != null) {
-                    val numberOfProfilesToAdd = f.number().numberBetween(1,  min(20, profiles.size))
-                    var profilesWorkingList = profiles.clone() as ArrayList<String>
+                    val numberOfProfilesToAdd = f.number().numberBetween(1, min(20, profiles.size))
+                    val profilesWorkingList = mutableListOf<String>().apply { addAll(profiles) }
 
                     for(i in 0 until numberOfProfilesToAdd) {
                         val random = f.number().numberBetween(0, profilesWorkingList.size)
@@ -234,7 +231,7 @@ class SetupOrganization : Consumer<APIClient> {
 
                     val numberOfMemberships = f.number().numberBetween(1, min(20, groups.size))
 
-                    var groupsWorkingList = groups.clone() as LinkedHashMap<String, String>
+                    val groupsWorkingList = mutableMapOf<String, String>().apply { putAll(groups) }
                     for(i in 0 until numberOfMemberships) {
                         val randomGroup = f.number().numberBetween(0, groupsWorkingList.size)
                         val randomRole = f.number().numberBetween(0, roles.size)

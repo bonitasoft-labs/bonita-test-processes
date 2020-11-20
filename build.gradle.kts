@@ -14,7 +14,6 @@ repositories {
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.bonitasoft.engine:bonita-client:7.10.5")
-    implementation("com.bonitasoft.engine:bonita-client-sp:7.10.5")
     implementation("org.bonitasoft.web:bonita-java-client:0.0.1")
     implementation("com.github.javafaker:javafaker:1.0.2")
     testImplementation("org.jetbrains.kotlin:kotlin-test")

@@ -43,7 +43,7 @@ abstract class BonitaProcess : Consumer<APIClient> {
 
     var processDefinitionId: Long? = null
 
-    override fun accept(client: APIClient) {
+    final override fun accept(client: APIClient) {
         client.safeExec {
             println("Disable process $name $version")
             processDefinitionId = processAPI.getProcessDefinitionId(name, version)

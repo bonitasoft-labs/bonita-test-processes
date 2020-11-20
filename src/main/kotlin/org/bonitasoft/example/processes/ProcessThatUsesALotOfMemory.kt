@@ -55,13 +55,4 @@ class ProcessThatUsesALotOfMemory(private val number: Int) : BonitaProcess() {
             ))
         }
     }
-
-    override fun accept(client: APIClient) {
-        super.accept(client)
-
-        println("Start process $name $version")
-        val deployed = client.processAPI.getProcessDefinitionId(name, version)
-        deployed.apply { client.processAPI.startProcess(this) }
-
-    }
 }

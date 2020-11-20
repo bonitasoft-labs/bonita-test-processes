@@ -48,10 +48,4 @@ class BasicProcess(private val number: Int) : BonitaProcess() {
 //            addClasspathResource(BarResource("jar$number.jar", ByteArray(2 * 1000 * 1000).apply { Random().nextBytes(this) }))
         }
     }
-
-    override fun accept(client: APIClient) {
-        super.accept(client)
-        val deployed = client.processAPI.getProcessDefinitionId(name, version)
-        deployed.apply { client.processAPI.startProcess(this) }
-    }
 }
