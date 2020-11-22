@@ -21,8 +21,8 @@ import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder
 import java.util.*
 import java.util.function.Consumer
 
-class DeployBigProcesses : Consumer<APIClient> {
-    override fun accept(apiClient: APIClient) {
+class DeployBigProcesses : Resource {
+    override fun deploy(apiClient: APIClient) {
         apiClient.safeExec {
             (1..60).forEach { processNumber ->
                 processAPI.deployAndEnableProcess(

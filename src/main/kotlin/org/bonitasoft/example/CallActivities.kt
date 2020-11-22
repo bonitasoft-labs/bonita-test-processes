@@ -31,8 +31,8 @@ import org.bonitasoft.example.connector.Sleep1sConnector
 import java.io.File
 import java.util.function.Consumer
 
-class CallActivities : Consumer<APIClient> {
-    override fun accept(apiClient: APIClient) {
+class CallActivities : Resource {
+    override fun deploy(apiClient: APIClient) {
         apiClient.safeExec {
             processAPI.disableProcess(processAPI.getProcessDefinitionId("CalledProcess", "1.0"))
         }

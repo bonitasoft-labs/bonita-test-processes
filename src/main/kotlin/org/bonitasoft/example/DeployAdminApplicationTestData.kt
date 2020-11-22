@@ -10,28 +10,28 @@ class DeployAdminApplicationTestData : Consumer<APIClient> {
     override fun accept(apiClient: APIClient) {
         val faker = Faker()
 
-        DeployEmployeeBDM().accept(apiClient)
+        DeployEmployeeBDM().deploy(apiClient)
 //        SetupOrganization().accept(apiClient)
         val calledProcess = ProcessWithBigData(100).apply {
-            accept(apiClient)
+            deploy(apiClient)
         }
-        StartXProcessesWithData(calledProcess.name, calledProcess.version, 1).accept(apiClient)
+        StartXProcessesWithData(calledProcess.name, calledProcess.version, 1).deploy(apiClient)
         val formName = "custompage_${faker.dog().breed()}"
-        DeployPage(formName, "form").accept(apiClient)
+        GeneratedPage(formName, "form").deploy(apiClient)
         (1..200).forEach {
-            GeneratedProcessWithForms("${faker.animal().name()}-$it", formName).accept(apiClient)
+            GeneratedProcessWithForms("${faker.animal().name()}-$it", formName).deploy(apiClient)
         }
         (1..40).forEach {
-            ProcessNotEnabled("${faker.rickAndMorty().character()}-$it").accept(apiClient)
+            ProcessNotEnabled("${faker.rickAndMorty().character()}-$it").deploy(apiClient)
         }
         (1..60).forEach {
-            ProcessHavingConfigurationIssues("${faker.dune().planet()}-$it").accept(apiClient)
+            ProcessHavingConfigurationIssues("${faker.dune().planet()}-$it").deploy(apiClient)
         }
         (1..500).forEach {
-            DeployPage("custompage_${faker.dog().breed()}-$it", "form").accept(apiClient)
+            GeneratedPage("custompage_${faker.dog().breed()}$it", "form").deploy(apiClient)
         }
         (1..50).forEach {
-            DeployPage("custompage_${faker.dog().breed()}-$it", "apiExtension").accept(apiClient)
+            GeneratedPage("custompage_${faker.dog().breed()}$it", "apiExtension").deploy(apiClient)
         }
 
 

@@ -24,10 +24,11 @@ import org.bonitasoft.engine.bpm.flownode.UserTaskDefinition
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder
 import org.bonitasoft.engine.form.FormMappingTarget
 import org.bonitasoft.engine.form.FormMappingType
+import org.bonitasoft.example.Resource
 import org.bonitasoft.example.safeExec
 import java.util.function.Consumer
 
-abstract class BonitaProcess(val enable:Boolean = true) : Consumer<APIClient> {
+abstract class BonitaProcess(val enable:Boolean = true) : Resource {
     val businessArchive: BusinessArchive by lazy {
         build()
     }
@@ -37,7 +38,7 @@ abstract class BonitaProcess(val enable:Boolean = true) : Consumer<APIClient> {
 
     var processDefinitionId: Long? = null
 
-    override fun accept(client: APIClient) {
+    override fun deploy(client: APIClient) {
         client.safeExec {
             println("Disable process $name $version")
             processDefinitionId = processAPI.getProcessDefinitionId(name, version)

@@ -9,8 +9,8 @@ import org.bonitasoft.engine.bdm.model.field.RelationField
 import org.bonitasoft.engine.bdm.model.field.SimpleField
 import java.util.function.Consumer
 
-class DeployEmployeeBDM : Consumer<APIClient> {
-    override fun accept(apiClient: APIClient) {
+class DeployEmployeeBDM : Resource {
+    override fun deploy(apiClient: APIClient) {
 
         apiClient.tenantAdministrationAPI.pause()
         apiClient.safeExec {

@@ -23,15 +23,10 @@ import org.bonitasoft.engine.identity.UserCreator
 import java.util.function.Consumer
 import kotlin.math.min
 
-class SetupOrganization : Consumer<APIClient> {
+class Organization : Resource {
 
-    companion object SetupOragnization {
+    companion object {
         val f = Faker()
-
-        val users = LinkedHashMap<String, String>() // f.name().username()
-        val groups = LinkedHashMap<String, String>() // f.commerce().department()
-        val roles = ArrayList<String>() // f.job().title()
-        val profiles = ArrayList<String>() // f.commerce().department()
     }
 
     private fun getRandomGroupPath(listOfGroups: LinkedHashMap<String, String>) : String {
@@ -47,7 +42,13 @@ class SetupOrganization : Consumer<APIClient> {
         return "$parentValue/$parentKey"
     }
 
-    override fun accept(apiClient: APIClient) {
+    override fun deploy(apiClient: APIClient) {
+
+
+        val users = LinkedHashMap<String, String>() // f.name().username()
+        val groups = LinkedHashMap<String, String>() // f.commerce().department()
+        val roles = ArrayList<String>() // f.job().title()
+        val profiles = ArrayList<String>() // f.commerce().department()
         // users
         for(i in 1 until 110) {
             var intermediary = f.name().username()
