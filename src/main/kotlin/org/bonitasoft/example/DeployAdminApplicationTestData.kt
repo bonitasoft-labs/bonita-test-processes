@@ -12,7 +12,7 @@ class DeployAdminApplicationTestData : Consumer<APIClient> {
 
         DeployEmployeeBDM().deploy(apiClient)
 //        SetupOrganization().accept(apiClient)
-        val calledProcess = ProcessWithBigData(100).apply {
+        val calledProcess = BigData(100).apply {
             deploy(apiClient)
         }
         StartXProcessesWithData(calledProcess.name, calledProcess.version, 1).deploy(apiClient)

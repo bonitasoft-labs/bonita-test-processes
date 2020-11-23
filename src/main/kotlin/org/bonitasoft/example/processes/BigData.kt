@@ -14,23 +14,27 @@
  */
 package org.bonitasoft.example.processes
 
-import org.bonitasoft.engine.api.APIClient
 import org.bonitasoft.engine.bpm.bar.BarResource
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder
 import org.bonitasoft.engine.bpm.bar.actorMapping.Actor
 import org.bonitasoft.engine.bpm.bar.actorMapping.ActorMapping
-import org.bonitasoft.engine.bpm.contract.ContractDefinition
+import org.bonitasoft.engine.bpm.connector.ConnectorEvent
 import org.bonitasoft.engine.bpm.contract.FileInputValue
-import org.bonitasoft.engine.bpm.contract.Type
-import org.bonitasoft.engine.bpm.process.impl.ContractDefinitionBuilder
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder
 import org.bonitasoft.engine.expression.ExpressionBuilder
 import org.bonitasoft.engine.operation.OperationBuilder
 import org.bonitasoft.example.toExpression
 import org.bonitasoft.example.toScript
+import java.io.BufferedOutputStream
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.nio.file.Files
 import java.util.*
+import java.util.jar.JarEntry
+import java.util.jar.JarOutputStream
+import javax.tools.ToolProvider
 
-class ProcessWithBigData(private val number: Int) : BonitaProcess() {
+class BigData(private val number: Int) : BonitaProcess() {
     override fun process(): ProcessDefinitionBuilder =
             ProcessDefinitionBuilder().createNewInstance("BigData-$number", "1.0")
                     .apply {
@@ -38,7 +42,7 @@ class ProcessWithBigData(private val number: Int) : BonitaProcess() {
                         addStartEvent("start")
 
                         for (i in 1 until 15) {
-                            addShortTextData("simpleVar" + i, "simple var content $i".toExpression() )
+                            addShortTextData("simpleVar" + i, "simple var content $i".toExpression())
                         }
 
                         addBusinessData("myEmployee","com.company.model.Employee", """
@@ -109,7 +113,11 @@ class ProcessWithBigData(private val number: Int) : BonitaProcess() {
                               <byAuthor>Reena Mehta</byAuthor>
                             </MyBookShelf>
                         """.trimIndent().toExpression())
-                        addContract().addFileInput("fileInputValues", "create my list of document", true)
+                        addContract().apply {
+                            addFileInput("fileInputValues", "create my list of document", true)
+                            addFileInput("file1", "single document")
+                            addFileInput("file2", "single document")
+                        }
                         addDocumentListDefinition("myDocumentList")
                                 .addInitialValue(
                                         ExpressionBuilder().createContractInputExpression("fileInputValues", List::class.java.name))
@@ -122,38 +130,37 @@ class ProcessWithBigData(private val number: Int) : BonitaProcess() {
                             addOperation(OperationBuilder().createSetDocumentList("myDocumentList",
                                     ExpressionBuilder().createContractInputExpression("fileInputValues", List::class.java.name)))
 
-                        }.addUserTask("user2", "theActor").addDisplayName("User 2".toExpression())
+                        }
+                        addUserTask("user2", "theActor").addDisplayName("User 2".toExpression())
+                        addUserTask("taskWithConnectors", "theActor").apply {
+                            addConnector("connectorThatSucceed1", "connectorThatSucceed", "1.0", ConnectorEvent.ON_ENTER)
+                            addConnector("connectorThatSucceed2", "connectorThatSucceed", "1.0", ConnectorEvent.ON_ENTER)
+                            addConnector("connectorThatSucceed3", "connectorThatSucceed", "1.0", ConnectorEvent.ON_ENTER)
+                            addConnector("connectorThatSucceed4", "connectorThatSucceed", "1.0", ConnectorEvent.ON_ENTER)
+                            addConnector("connectorThatSucceed5", "connectorThatSucceed", "1.0", ConnectorEvent.ON_ENTER)
+                            addConnector("connectorToBeSkipped1", "connectorThatFails", "1.0", ConnectorEvent.ON_ENTER)
+                            addConnector("connectorToBeSkipped2", "connectorThatFails", "1.0", ConnectorEvent.ON_ENTER)
+                            addConnector("connectorToBeSkipped3", "connectorThatFails", "1.0", ConnectorEvent.ON_ENTER)
+                            addConnector("connectorToBeSkipped4", "connectorThatFails", "1.0", ConnectorEvent.ON_ENTER)
+                            addConnector("connectorToBeSkipped5", "connectorThatFails", "1.0", ConnectorEvent.ON_ENTER)
+                            addConnector("connectorThatFails1", "connectorThatFails", "1.0", ConnectorEvent.ON_ENTER).ignoreError()
+                            addConnector("connectorThatFails2", "connectorThatFails", "1.0", ConnectorEvent.ON_ENTER).ignoreError()
+                            addConnector("connectorThatFails3", "connectorThatFails", "1.0", ConnectorEvent.ON_ENTER).ignoreError()
+                            addConnector("connectorThatFails4", "connectorThatFails", "1.0", ConnectorEvent.ON_ENTER).ignoreError()
+                            addConnector("connectorThatFails5", "connectorThatFails", "1.0", ConnectorEvent.ON_ENTER)// we will be in that state
+                            addConnector("connectorToBeExecuted1", "connectorThatSucceed", "1.0", ConnectorEvent.ON_FINISH)
+                            addConnector("connectorToBeExecuted2", "connectorThatSucceed", "1.0", ConnectorEvent.ON_FINISH)
+                            addConnector("connectorToBeExecuted3", "connectorThatSucceed", "1.0", ConnectorEvent.ON_FINISH)
+                            addConnector("connectorToBeExecuted4", "connectorThatSucceed", "1.0", ConnectorEvent.ON_FINISH)
+                            addConnector("connectorToBeExecuted5", "connectorThatSucceed", "1.0", ConnectorEvent.ON_FINISH)
+                        }
                         addAutomaticTask("user3").addDisplayName("User 3".toExpression())
                         addAutomaticTask("userTaskFailed").addDisplayName("throw new Exception()".toScript())
                         addTransition("start", "user1")
                         addTransition("start", "user2")
                         addTransition("start", "user3")
+                        addTransition("start", "taskWithConnectors")
                     }
-
-
-    /*
-        //when
-        final ProcessDefinition processDefinition = deployAndEnableProcessWithActor(builder.done(), ACTOR_NAME, matti);
-        final ProcessInstance processInstance = getProcessAPI().startProcessWithInputs(processDefinition.getId(),
-                Collections.<String, Serializable> singletonMap("reportInit",
-                        new FileInputValue("theFile", "", "theContent".getBytes())));
-        final HumanTaskInstance userTask = waitForUserTaskAndGetIt(TASK1);        //then
-        final ContractDefinition contract = getProcessAPI().getUserTaskContract(userTask.getId());
-        assertThat(contract.getInputs()).hasSize(2);
-        final InputDefinition complexInput = contract.getInputs().get(0);
-        assertThat(complexInput.getName()).isEqualTo("expenseLine");
-        assertThat(complexInput.isMultiple()).as("should be multiple").isTrue();
-        assertThat(complexInput.getDescription()).isEqualTo("expense report line");
-        assertThat(complexInput.getInputs()).as("should have 3 inputs").hasSize(3);
-        final InputDefinition fileInput = contract.getInputs().get(1);
-        assertThat(fileInput.getInputs()).hasSize(2);
-        assertThat(fileInput.getInputs()).containsExactly(new InputDefinitionImpl("filename", "Name of the file"),
-                new InputDefinitionImpl("content", "Content of the file"));
-        final Document myDoc = getProcessAPI().getLastDocument(processInstance.getId(), "myDoc");
-        final byte[] documentContent = getProcessAPI().getDocumentContent(myDoc.getContentStorageId());
-        assertThat(new String(documentContent)).isEqualTo("theContent");        //clean up
-        disableAndDeleteProcess(processDefinition);
-     */
 
     override fun withResources(bar: BusinessArchiveBuilder) {
         bar.apply {
@@ -163,7 +170,68 @@ class ProcessWithBigData(private val number: Int) : BonitaProcess() {
                     addUser("walter.bates")
                 })
             }
-//            addClasspathResource(BarResource("jar$number.jar", ByteArray(2 * 1000 * 1000).apply { Random().nextBytes(this) }))
+            addConnectorImplementation(generateImpl("connectorThatSucceed", "implementationOfConnectorThatSucceed", "ConnectorThatSucceed"))
+            addClasspathResource(BarResource("connectorThatSucceed.jar", generateJar("ConnectorThatSucceed", """
+                public class ConnectorThatSucceed extends org.bonitasoft.engine.connector.AbstractConnector {
+                    public void validateInputParameters() {}
+                    protected void executeBusinessLogic() {}
+                }
+""".trimIndent())))
+
+            addConnectorImplementation(generateImpl("connectorThatFails", "implementationOfConnectorThatFails", "ConnectorThatFails"))
+            addClasspathResource(BarResource("connectorThatFails.jar", generateJar("ConnectorThatFails", """
+                public class ConnectorThatFails extends org.bonitasoft.engine.connector.AbstractConnector {
+                    public void validateInputParameters() {}
+                    protected void executeBusinessLogic() { throw new java.lang.RuntimeException("exception thrown by the connector");}
+                }
+""".trimIndent())))
         }
     }
+
+    private fun generateImpl(connectorId: String, implementationId: String, connectorClass: String): BarResource {
+        return BarResource("$connectorId.impl", """
+                    <connectorImplementation>
+                        <definitionId>$connectorId</definitionId>
+                        <definitionVersion>1.0</definitionVersion>
+                        <implementationClassname>$connectorClass</implementationClassname>
+                        <implementationId>$implementationId</implementationId>
+                        <implementationVersion>1.0</implementationVersion>
+                    <jarDependencies>
+                        <jarDependency>${connectorId}.jar</jarDependency>
+                    </jarDependencies>
+                    </connectorImplementation>
+                    """.trimIndent().toByteArray()
+        )
+    }
+
+    private fun generateJar(className: String, content: String): ByteArray? {
+        val root = Files.createTempDirectory("tempCompile").toFile()
+        val sourceFile = File(root, "$className.java")
+        Files.write(sourceFile.toPath(), content.toByteArray())
+        val compiler = ToolProvider.getSystemJavaCompiler()
+        val run = compiler.run(null, null, null, sourceFile.path)
+        require(run == 0) { "Unable to compile the file, see logs" }
+        val bytes = Files.readAllBytes(root.toPath().resolve("$className.class"))
+        return generateJar(Collections.singletonMap("$className.class", bytes))
+    }
+
+    private fun generateJar(resources: Map<String, ByteArray>): ByteArray {
+        var baos: ByteArrayOutputStream? = null
+        var jarOutStream: JarOutputStream? = null
+        try {
+            baos = ByteArrayOutputStream()
+            jarOutStream = JarOutputStream(BufferedOutputStream(baos))
+            for ((key, value) in resources) {
+                jarOutStream.putNextEntry(JarEntry(key))
+                jarOutStream.write(value)
+            }
+            jarOutStream.flush()
+            baos.flush()
+        } finally {
+            jarOutStream?.close()
+            baos?.close()
+        }
+        return baos!!.toByteArray()
+    }
+
 }

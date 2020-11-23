@@ -173,8 +173,8 @@ class ComplexProcess(private val number: Int) : BonitaProcess() {
         }
     }
 
-    override fun accept(client: APIClient) {
-        super.accept(client)
+    override fun deploy(client: APIClient) {
+        super.deploy(client)
         val deployed = client.processAPI.getProcessDefinitionId(name, version)
         deployed.apply { client.processAPI.startProcess(this) }
     }
