@@ -12,9 +12,9 @@ class DeployAdminApplicationTestData : Consumer<APIClient> {
 //
 //        DeployEmployeeBDM().deploy(apiClient)
 ////        SetupOrganization().accept(apiClient)
-//        val calledProcess = BigData(100).apply {
-//            deploy(apiClient)
-//        }
+        val calledProcess = BigData(100).apply {
+            deploy(apiClient)
+        }
 //        StartXProcessesWithData(calledProcess.name, calledProcess.version, 1).deploy(apiClient)
 //        val formName = "custompage_${faker.dog().breed()}"
 //        GeneratedPage(formName, "form").deploy(apiClient)
@@ -33,9 +33,9 @@ class DeployAdminApplicationTestData : Consumer<APIClient> {
 //        (1..50).forEach {
 //            GeneratedRestApiExt("custompage_${faker.dog().name().replace(" ", "")}$it").deploy(apiClient)
 //        }
-        (1..10).forEach {
-            GeneratedApplication("custompage_${faker.dog().name().replace(" ", "")}$it").deploy(apiClient)
-        }
+//        (1..10).forEach {
+//            GeneratedApplication("custompage_${faker.dog().name().replace(" ", "")}$it").deploy(apiClient)
+//        }
 
 
         //TODO add process enabled but with configuration issues

@@ -20,6 +20,7 @@ import org.bonitasoft.engine.bpm.bar.actorMapping.Actor
 import org.bonitasoft.engine.bpm.bar.actorMapping.ActorMapping
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent
 import org.bonitasoft.engine.bpm.contract.FileInputValue
+import org.bonitasoft.engine.bpm.flownode.TaskPriority
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder
 import org.bonitasoft.engine.expression.ExpressionBuilder
 import org.bonitasoft.engine.operation.OperationBuilder
@@ -124,15 +125,21 @@ class BigData(private val number: Int) : BonitaProcess() {
 
                         addDocumentDefinition("myDoc").addInitialValue(ExpressionBuilder().createContractInputExpression("file1", FileInputValue::class.java.name))
                         addDocumentDefinition("myDoc2").addInitialValue(ExpressionBuilder().createContractInputExpression("file2", FileInputValue::class.java.name))
+                        (1..10).forEach { index ->
+                            addUserTask("taskWithPriorityUNDER_NORMAL-$index", "theActor").addPriority(TaskPriority.UNDER_NORMAL.name)
+                            addUserTask("taskWithPriorityABOVE_NORMAL-$index", "theActor").addPriority(TaskPriority.ABOVE_NORMAL.name)
+                            addUserTask("taskWithPriorityHIGHEST-$index", "theActor").addPriority(TaskPriority.HIGHEST.name)
+                            addUserTask("taskWithPriorityLOWEST-$index", "theActor").addPriority(TaskPriority.LOWEST.name)
 
-                        addUserTask("user1", "theActor").apply {
+                        }
+                        addUserTask("user1", "theActor").addPriority(TaskPriority.UNDER_NORMAL.name).apply {
                             addContract().addFileInput("fileInputValues", "update my list of document", true)
                             addOperation(OperationBuilder().createSetDocumentList("myDocumentList",
                                     ExpressionBuilder().createContractInputExpression("fileInputValues", List::class.java.name)))
 
                         }
-                        addUserTask("user2", "theActor").addDisplayName("User 2".toExpression())
-                        addUserTask("taskWithConnectors", "theActor").apply {
+                        addUserTask("user2", "theActor").addPriority(TaskPriority.ABOVE_NORMAL.name).addDisplayName("User 2".toExpression())
+                        addUserTask("taskWithConnectors", "theActor").addPriority(TaskPriority.HIGHEST.name).apply {
                             addConnector("connectorThatSucceed1", "connectorThatSucceed", "1.0", ConnectorEvent.ON_ENTER)
                             addConnector("connectorThatSucceed2", "connectorThatSucceed", "1.0", ConnectorEvent.ON_ENTER)
                             addConnector("connectorThatSucceed3", "connectorThatSucceed", "1.0", ConnectorEvent.ON_ENTER)
