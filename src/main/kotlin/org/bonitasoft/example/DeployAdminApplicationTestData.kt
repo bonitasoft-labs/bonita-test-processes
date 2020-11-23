@@ -30,8 +30,11 @@ class DeployAdminApplicationTestData : Consumer<APIClient> {
 //        (1..500).forEach {
 //            GeneratedPage("custompage_${faker.dog().breed()}$it", "form").deploy(apiClient)
 //        }
-        (1..50).forEach {
-            GeneratedRestApiExt("custompage_${faker.dog().name().replace(" ", "")}$it").deploy(apiClient)
+//        (1..50).forEach {
+//            GeneratedRestApiExt("custompage_${faker.dog().name().replace(" ", "")}$it").deploy(apiClient)
+//        }
+        (1..10).forEach {
+            GeneratedApplication("custompage_${faker.dog().name().replace(" ", "")}$it").deploy(apiClient)
         }
 
 
