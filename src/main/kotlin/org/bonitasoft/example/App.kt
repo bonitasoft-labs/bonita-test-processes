@@ -34,8 +34,6 @@ class App {
         ))
         val apiClient = APIClient().apply { login("install", "install") }
 
-
-
         DeployAdminApplicationTestData().accept(apiClient)
     }
 }
@@ -70,6 +68,5 @@ fun ProfileAPI.addMembershipToProfile(group: Group, role: Role, profileName: Str
 }
 
 fun main(args: Array<String>) {
-    App().run(args.getOrElse(0) { "http://ec2-54-72-213-214.eu-west-1.compute.amazonaws.com:8080/" })
-    //App().run(args.getOrElse(0) { "http://localhost:8080" })
+    App().run(args.getOrElse(0) { "http://localhost:8080" })
 }

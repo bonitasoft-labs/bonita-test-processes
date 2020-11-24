@@ -8,13 +8,13 @@ import java.util.function.Consumer
 
 class DeployAdminApplicationTestData : Consumer<APIClient> {
     override fun accept(apiClient: APIClient) {
-        val faker = Faker()
+//        val faker = Faker()
 //
 //        DeployEmployeeBDM().deploy(apiClient)
-////        SetupOrganization().accept(apiClient)
-        val calledProcess = BigData(100).apply {
-            deploy(apiClient)
-        }
+//        SetupOrganization().accept(apiClient)
+//        val calledProcess = BigData(100).apply {
+//            deploy(apiClient)
+//        }
 //        StartXProcessesWithData(calledProcess.name, calledProcess.version, 1).deploy(apiClient)
 //        val formName = "custompage_${faker.dog().breed()}"
 //        GeneratedPage(formName, "form").deploy(apiClient)
@@ -36,9 +36,8 @@ class DeployAdminApplicationTestData : Consumer<APIClient> {
 //        (1..10).forEach {
 //            GeneratedApplication("custompage_${faker.dog().name().replace(" ", "")}$it").deploy(apiClient)
 //        }
-
-
-        //TODO add process enabled but with configuration issues
-
+//        (1..150).forEach {
+//            EnabledProcessHavingConfigurationIssues("${faker.animal().name()}-$it").deploy(apiClient)
+//        }
     }
 }
