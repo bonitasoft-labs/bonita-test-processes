@@ -14,6 +14,8 @@
  */
 package org.bonitasoft.example.processes
 
+import com.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilderExt
+import com.github.javafaker.Faker
 import org.bonitasoft.engine.bpm.bar.BarResource
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder
 import org.bonitasoft.engine.bpm.bar.actorMapping.Actor
@@ -52,7 +54,7 @@ class BigData(private val number: Int) : BonitaProcess() {
                             return employee
                         """.trimIndent().toScript("com.company.model.Employee"))
 
-                        var faker = Faker()
+                        val faker = Faker()
                         setStringIndex(1, faker.lorem().fixedString(255), faker.lorem().fixedString(255).toExpression())
                         setStringIndex(2, faker.lorem().fixedString(255), faker.lorem().fixedString(255).toExpression())
                         setStringIndex(3, faker.lorem().fixedString(255), faker.lorem().fixedString(255).toExpression())
