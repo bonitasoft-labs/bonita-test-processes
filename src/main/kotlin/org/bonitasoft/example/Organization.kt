@@ -20,7 +20,6 @@ import org.bonitasoft.engine.api.APIClient
 import org.bonitasoft.engine.identity.GroupCreator
 import org.bonitasoft.engine.identity.RoleCreator
 import org.bonitasoft.engine.identity.UserCreator
-import java.util.function.Consumer
 import kotlin.math.min
 
 class Organization : Resource {
@@ -80,11 +79,7 @@ class Organization : Resource {
 
         // profile
         for(i in 1 until 11) {
-            var intermediary = f.commerce().department().replace(" &", ",")
-            while (profiles.contains(intermediary)) {
-                intermediary = f.commerce().department().replace(" &", ",")
-            }
-            profiles.add(intermediary)
+            profiles.add(f.commerce().department().replace(" &", ",") + "-" + i)
         }
 
         // create all the profiles
@@ -129,13 +124,10 @@ class Organization : Resource {
         }.forEach {
             apiClient.safeExec {
                 if (it != null) {
-                    val numberOfProfilesToAdd = f.number().numberBetween(10, min(30, profiles.size))
-                    var profilesWorkingList = profiles.clone() as ArrayList<String>
-
+                    val numberOfProfilesToAdd = f.number().numberBetween(10, 30)
                     for (i in 0 until numberOfProfilesToAdd) {
-                        val random = f.number().numberBetween(0, profilesWorkingList.size)
-                        profileAPI.addGroupToProfile(it, profilesWorkingList[random])
-                        profilesWorkingList.removeAt(random)
+                        val random = f.number().numberBetween(0, profiles.size)
+                        profileAPI.addGroupToProfile(it, profiles[random])
                     }
                 }
             }
@@ -159,12 +151,9 @@ class Organization : Resource {
             apiClient.safeExec {
                 if (it != null) {
                     val numberOfProfilesToAdd = f.number().numberBetween(50, min(100, profiles.size))
-                    var profilesWorkingList = profiles.clone() as ArrayList<String>
-
                     for (i in 0 until numberOfProfilesToAdd) {
-                        val random = f.number().numberBetween(0, profilesWorkingList.size)
-                        profileAPI.addRoleToProfile(it, profilesWorkingList[random])
-                        profilesWorkingList.removeAt(random)
+                        val random = f.number().numberBetween(0, profiles.size)
+                        profileAPI.addRoleToProfile(it, profiles[random])
                     }
                 }
             }

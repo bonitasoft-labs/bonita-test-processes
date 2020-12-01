@@ -43,7 +43,9 @@ infix fun <T> org.bonitasoft.engine.api.APIClient.safeExec(executable: org.bonit
     return try {
         this.executable()
     } catch (e: Exception) {
-        println("Error: ${e.javaClass.name} ${e.message}")
+        val traceElement = e.stackTrace.first { it.className.startsWith("org.bonitasoft.example") }
+        println("Error: ${e.javaClass.name} ${e.message} at ${traceElement.className}.${traceElement.methodName}:${traceElement.lineNumber}")
+
         null
     }
 }
