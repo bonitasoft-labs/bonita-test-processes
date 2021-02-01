@@ -34,7 +34,7 @@ class App {
         ))
         val apiClient = APIClient().apply { login("install", "install") }
 
-        DeployAdminApplicationTestData().accept(apiClient)
+        DeploySqlServerIssueTestData().accept(apiClient)
     }
 }
 
