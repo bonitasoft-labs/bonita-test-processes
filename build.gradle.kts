@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.jetbrains.kotlin.jvm").version("1.3.21")
+    id("org.jetbrains.kotlin.jvm").version("1.4.20")
     id("com.bonitasoft.gradle.bonita-formatting").version("0.1.53")
     application
 }
@@ -18,6 +18,8 @@ dependencies {
     implementation("com.github.javafaker:javafaker:1.0.2")
     implementation("org.apache.logging.log4j:log4j-core:2.14.0")
     implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.14.0")
+    implementation("org.awaitility:awaitility-kotlin:4.0.3")
+    implementation( "org.nield:kotlin-statistics:1.2.1")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 }
