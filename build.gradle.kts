@@ -18,7 +18,7 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-core:2.14.0")
     implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.14.0")
     implementation("org.awaitility:awaitility-kotlin:4.0.3")
-    implementation( "org.nield:kotlin-statistics:1.2.1")
+    implementation("org.nield:kotlin-statistics:1.2.1")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 }
