@@ -13,8 +13,7 @@ repositories {
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("org.bonitasoft.engine:bonita-client:7.10.5")
-    implementation("com.bonitasoft.engine:bonita-client-sp:7.10.5")
+    implementation("org.bonitasoft.engine:bonita-client:7.12.1")
     implementation("com.github.javafaker:javafaker:1.0.2")
     implementation("org.apache.logging.log4j:log4j-core:2.14.0")
     implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.14.0")

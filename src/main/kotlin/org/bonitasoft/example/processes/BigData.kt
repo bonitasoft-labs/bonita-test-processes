@@ -14,7 +14,6 @@
  */
 package org.bonitasoft.example.processes
 
-import com.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilderExt
 import com.github.javafaker.Faker
 import org.bonitasoft.engine.bpm.bar.BarResource
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder
@@ -39,7 +38,7 @@ import javax.tools.ToolProvider
 
 class BigData(private val number: Int) : BonitaProcess() {
     override fun process(): ProcessDefinitionBuilder =
-            ProcessDefinitionBuilderExt().createNewInstance("BigData-$number", "1.0")
+            ProcessDefinitionBuilder().createNewInstance("BigData-$number", "1.0")
                     .apply {
                         addActor("theActor", true)
                         addStartEvent("start")

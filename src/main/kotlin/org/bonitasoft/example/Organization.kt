@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.example
 
-import com.bonitasoft.engine.profile.ProfileCreator
+//import com.bonitasoft.engine.profile.ProfileCreator
 import com.github.javafaker.Faker
 import org.bonitasoft.engine.api.APIClient
 import org.bonitasoft.engine.identity.GroupCreator
@@ -83,27 +83,27 @@ class Organization : Resource {
         }
 
         // create all the profiles
-        profiles.map {
-            apiClient.safeExec {
-                val apiClientSp = this as com.bonitasoft.engine.api.APIClient
-
-                val profileAPI = apiClientSp.profileAPI
-
-                var pc = ProfileCreator(it)
-
-                val trueOrFalse = f.number().numberBetween(0, 2)
-                if (trueOrFalse == 0) {
-                    pc.setDescription(f.harryPotter().quote())
-                }
-
-                profileAPI.createProfile(pc)
-            }
-        }
-        apiClient.safeExec {
-            val apiClientSp = this as com.bonitasoft.engine.api.APIClient
-            apiClientSp.profileAPI.createProfile(ProfileCreator("Administrator"))
-            apiClientSp.profileAPI.createProfile(ProfileCreator("User"))
-        }
+//        profiles.map {
+//            apiClient.safeExec {
+//                val apiClientSp = this as com.bonitasoft.engine.api.APIClient
+//
+//                val profileAPI = apiClientSp.profileAPI
+//
+//                var pc = ProfileCreator(it)
+//
+//                val trueOrFalse = f.number().numberBetween(0, 2)
+//                if (trueOrFalse == 0) {
+//                    pc.setDescription(f.harryPotter().quote())
+//                }
+//
+//                profileAPI.createProfile(pc)
+//            }
+//        }
+//        apiClient.safeExec {
+//            val apiClientSp = this as com.bonitasoft.engine.api.APIClient
+//            apiClientSp.profileAPI.createProfile(ProfileCreator("Administrator"))
+//            apiClientSp.profileAPI.createProfile(ProfileCreator("User"))
+//        }
 
 
         // create all the groups

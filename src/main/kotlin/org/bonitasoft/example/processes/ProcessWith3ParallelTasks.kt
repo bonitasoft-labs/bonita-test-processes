@@ -22,12 +22,12 @@ import org.bonitasoft.example.toExpression
 
 class ProcessWith3ParallelTasks : BonitaProcess() {
     override fun process(): ProcessDefinitionBuilder {
-        return ProcessDefinitionBuilder().createNewInstance("ProcessWith2AutomaticTasks", "1.0")
+        return ProcessDefinitionBuilder().createNewInstance("ProcessWith3ParallelTasks", "1.0")
                 .apply {
                     addActor("theActor", true)
                     addUserTask("t1", "theActor").addDisplayName("Task 1".toExpression())
                     addUserTask("t2", "theActor").addDisplayName("Task 2".toExpression())
-                    addUserTask("t2", "theActor").addDisplayName("Task 3".toExpression())
+                    addUserTask("t3", "theActor").addDisplayName("Task 3".toExpression())
                 }
     }
 

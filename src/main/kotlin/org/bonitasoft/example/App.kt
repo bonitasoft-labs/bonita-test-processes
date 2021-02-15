@@ -14,7 +14,7 @@
  */
 package org.bonitasoft.example
 
-import com.bonitasoft.engine.api.APIClient
+import org.bonitasoft.engine.api.APIClient
 import org.bonitasoft.engine.api.ApiAccessType
 import org.bonitasoft.engine.api.ProfileAPI
 import org.bonitasoft.engine.identity.Group
@@ -34,7 +34,10 @@ class App {
         ))
         val apiClient = APIClient().apply { login("install", "install") }
 
+//        Organization().deploy(apiClient)
         DeployAdminApplicationTestData().accept(apiClient)
+//        val businessArchive = ProcessWithMessageEventSubProcess().build()
+//        BusinessArchiveFactory.writeBusinessArchiveToFile(businessArchive, File("ProcessWithMessageEventSubProcess.bar"))
     }
 }
 
