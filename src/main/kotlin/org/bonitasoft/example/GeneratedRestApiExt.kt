@@ -23,10 +23,11 @@ import java.util.zip.ZipOutputStream
 class GeneratedRestApiExt(val pageName: String) : Resource {
     override fun deploy(apiClient: APIClient) {
 
-        apiClient.customPageAPI.createPage(PageCreator(pageName, "custom_rest_api_$pageName.zip").apply {
-            setContentType("apiExtension")
-            setDisplayName("Generated page $pageName")
-        }, zip(mutableMapOf(
+        apiClient.safeExec {
+            customPageAPI.createPage(PageCreator(pageName, "custom_rest_api_$pageName.zip").apply {
+                setContentType("apiExtension")
+                setDisplayName("Generated page $pageName")
+            }, zip(mutableMapOf(
                 "page.properties" to """
                     displayName=$pageName
                     contentType=apiExtension
@@ -57,8 +58,9 @@ class GeneratedRestApiExt(val pageName: String) : Resource {
 
                     }
                     """.trimIndent().toByteArray()
-        )))
+            )))
 
+        }
     }
 
     fun zip(files: Map<String, ByteArray>): ByteArray {
