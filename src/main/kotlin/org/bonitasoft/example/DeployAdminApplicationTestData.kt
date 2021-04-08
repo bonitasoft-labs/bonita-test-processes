@@ -32,25 +32,25 @@ class DeployAdminApplicationTestData : Consumer<APIClient> {
         StartXProcessesWithData(calledProcess.name, calledProcess.version, 1).deploy(apiClient)
         val formName = "custompage_${faker.dog().breed()}"
         GeneratedPage(formName, "form").deploy(apiClient)
-        (1..200).forEach {
+        (1..12).forEach {
             GeneratedProcessWithForms("GeneratedProcessWithForms-${faker.animal().name()}-$it", formName).deploy(apiClient)
         }
-        (1..40).forEach {
+        (1..12).forEach {
             ProcessNotEnabled("ProcessNotEnabled-${faker.rickAndMorty().character()}-$it").deploy(apiClient)
         }
-        (1..60).forEach {
+        (1..12).forEach {
             ProcessHavingConfigurationIssues("ProcessHavingConfigurationIssues-${faker.dune().planet()}-$it").deploy(apiClient)
         }
-        (1..500).forEach {
+        (1..12).forEach {
             GeneratedPage("custompage_${faker.dog().breed().replace(" ", "")}$it", "form").deploy(apiClient)
         }
-        (1..50).forEach {
+        (1..12).forEach {
             GeneratedRestApiExt("custompage_${faker.dog().name().replace(" ", "")}$it").deploy(apiClient)
         }
-        (1..10).forEach {
-            GeneratedApplication("custompage_${faker.dog().name().replace(" ", "")}$it").deploy(apiClient)
+        (1..12).forEach {
+            GeneratedApplication("app_${faker.dog().name().replace(" ", "")}$it").deploy(apiClient)
         }
-        (1..150).forEach {
+        (1..12).forEach {
             EnabledProcessHavingConfigurationIssues("EnabledProcessHavingConfigurationIssues-${faker.animal().name()}-$it").deploy(apiClient)
         }
     }

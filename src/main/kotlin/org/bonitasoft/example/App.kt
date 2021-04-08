@@ -23,6 +23,7 @@ import org.bonitasoft.engine.identity.User
 import org.bonitasoft.engine.profile.ProfileMemberCreator
 import org.bonitasoft.engine.search.SearchOptionsBuilder
 import org.bonitasoft.engine.util.APITypeManager
+import org.bonitasoft.example.processes.ProcessWithMessageEventSubProcess
 
 class App {
 
@@ -30,7 +31,7 @@ class App {
 
         APITypeManager.setAPITypeAndParams(ApiAccessType.HTTP, mapOf(
                 "server.url" to url,
-                "application.name" to "bonita"
+                "application.name" to ""
         ))
         val apiClient = APIClient().apply { login("install", "install") }
 

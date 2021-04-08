@@ -23,9 +23,11 @@ class GeneratedApplication(val applicationName: String) : Resource {
     override fun deploy(apiClient: APIClient) {
 
 
-        val content = String(Files.readAllBytes(Paths.get(GeneratedPage::class.java.getResource("/applicationDescriptorFile.xml").toURI())))
+        val content = String(Files.readAllBytes(Paths.get(GeneratedApplication::class.java.getResource("/applicationDescriptorFile.xml").toURI())))
 
-        apiClient.applicationAPI.importApplications(content.replace("\$APP_NAME", applicationName).toByteArray(), ApplicationImportPolicy.REPLACE_DUPLICATES)
+        apiClient.safeExec {
+            applicationAPI.importApplications(content.replace("\$APP_NAME", applicationName).toByteArray(), ApplicationImportPolicy.REPLACE_DUPLICATES)
+        }
 
 
     }
