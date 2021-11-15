@@ -23,25 +23,38 @@ import org.bonitasoft.engine.identity.User
 import org.bonitasoft.engine.profile.ProfileMemberCreator
 import org.bonitasoft.engine.search.SearchOptionsBuilder
 import org.bonitasoft.engine.util.APITypeManager
+import org.bonitasoft.example.datasets.Dataset
+import org.bonitasoft.example.datasets.DevDatasetGenerator
+import org.bonitasoft.example.datasets.PerformanceDatasetGenerator
 import org.bonitasoft.example.processes.ProcessWithMessageEventSubProcess
+import picocli.CommandLine
+import java.net.URL
+import java.util.concurrent.Callable
+import kotlin.system.exitProcess
 
-class App {
+@CommandLine.Command(name = "dataset", mixinStandardHelpOptions = true, version = ["dataset 0.0.1"],
+    description = ["Generate bonita datasets"])
+class BonitaDatasetCLI : Callable<Int> {
 
-    fun run(url: String) {
+    @CommandLine.Parameters(paramLabel = "Dataset", description = ["The dataset ID you want to generate"])
+    lateinit var datasetID: Dataset
 
-        APITypeManager.setAPITypeAndParams(ApiAccessType.HTTP, mapOf(
-                "server.url" to url,
-                "application.name" to ""
-        ))
-        val apiClient = APIClient().apply { login("install", "install") }
+    @CommandLine.Option(names = ["-h", "--url"], paramLabel = "Bonita URL", description = ["Destination Bonita URL where dataset will be generated"], interactive = true)
+    var bonitaURL: String = "http://localhost:8080"
 
-//        Organization().deploy(apiClient)
-        DeployAdminApplicationTestData().accept(apiClient)
-//        val businessArchive = ProcessWithMessageEventSubProcess().build()
-//        BusinessArchiveFactory.writeBusinessArchiveToFile(businessArchive, File("ProcessWithMessageEventSubProcess.bar"))
+    @CommandLine.Option(names = ["-a", "--app"], paramLabel = "Bonita App Name", description = ["Bonita App name where dataset will be generated"], interactive = true)
+    var appName: String = "bonita"
+
+
+    override fun call(): Int {
+        when(datasetID){
+            Dataset.DEV -> DevDatasetGenerator().run(bonitaURL, appName);
+            Dataset.PERF -> PerformanceDatasetGenerator().run(bonitaURL, appName);
+        }
+        return 0;
     }
-}
 
+}
 
 infix fun <T> org.bonitasoft.engine.api.APIClient.safeExec(executable: org.bonitasoft.engine.api.APIClient.() -> T): T? {
     return try {
@@ -73,6 +86,4 @@ fun ProfileAPI.addMembershipToProfile(group: Group, role: Role, profileName: Str
     createProfileMember(getProfileByName(profileName), -1L, group.id, role.id)
 }
 
-fun main(args: Array<String>) {
-    App().run(args.getOrElse(0) { "http://localhost:8080" })
-}
+fun main(args: Array<String>) : Unit = exitProcess(CommandLine(BonitaDatasetCLI()).execute(*args))
