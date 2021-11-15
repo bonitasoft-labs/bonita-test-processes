@@ -20,7 +20,6 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.14.0")
     implementation("org.awaitility:awaitility-kotlin:4.0.3")
     implementation("org.nield:kotlin-statistics:1.2.1")
-    implementation("org.bonitasoft.web:bonita-java-client:0.0.3-SNAPSHOT")
     implementation("info.picocli:picocli:4.6.2")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
